@@ -17,13 +17,14 @@ providing a complete solution yet, so let me walk you through it.
 # Prerequisites
 
 The naming of *Image Builder* and it's various parts need
-[some introduction](../documentation/). So I'll give you the steps you need
-in order to get it all installed. We'll also use ```podman``` later on.
+[some introduction](../documentation/) before they make sense. So I'll give
+list the actual package names you need for a complete working *Image Builder*
+setup. We'll also use `podman` later on:
 
     $ sudo yum install osbuild osbuild-ostree osbuild-composer composer-cli podman
     $ sudo systemctl start osbuild-composer.socket
 
-We'll need one of the bootable install ISO images for
+You will need one of the bootable install ISO images for
 [Fedora](https://getfedora.org/) or [RHEL](https://developers.redhat.com/products/rhel/download).
 I used a
 [Fedora 32 netinst image](https://ftp.fau.de/fedora/linux/releases/32/Server/x86_64/iso/Fedora-Server-netinst-x86_64-32-1.6.iso) so get that downloading ahead of time.
@@ -51,26 +52,26 @@ administrative account on the local machine. Then click on *Image Builder* in th
 ![Image Builder empty screen](howto-ostree-anaconda-empty.png)
 
 Click the *Create Blueprint* button to make a new blueprint and give it
-a simple name. In the instructions below we use ```iot``` so for simplicity
+a simple name. In the instructions below we use `iot` so for simplicity
 just stick with that here:
 
 ![Image Builder Create Blueprint](howto-ostree-anaconda-create-blueprint.png)
 
 You don't need to add any additional software to the blueprint to get a bootable
-system. Click the *Create Image* button, and choose the *Fedora IoT Commit* as
+system. Click the *Create Image* button, and choose *Fedora IoT Commit* as
 the image *Type*:
 
 ![Image Builder Create Image](howto-ostree-anaconda-create-image.png)
 
 Once you click *Create* the image build will start, and take several minutes
-to complete. Unfortunately you won't see any progress information or logs
-until its done, so just be patient:
+to complete. You won't see any progress information or logs until its done,
+so just be patient:
 
 ![Image Builder in progress](howto-ostree-anaconda-queue-progress.png)
 
 Once the image build is done, choose the option to *Download* the image which
 is hidden in the kebab menu next to *Logs* button. You'll get a tarball
-named something like ```8e8014f8-4d15-441a-a26d-9ed7fc89e23a-commit.tar```
+named something like `8e8014f8-4d15-441a-a26d-9ed7fc89e23a-commit.tar`
 which contains the OSTree commit that was just created. Save that file
 to a local directory and we'll place a few additional files next to it
 in later steps.
@@ -81,10 +82,10 @@ in later steps.
 
 If you created an OSTree via the GUI above, you can skip this section.
 Here's how to create an OSTree via Image Builder from the command line.
-The *Image Builder* command line tool is called ```composer-cli```.
+The *Image Builder* command line tool is called `composer-cli`.
 
 We first have to have a blueprint defined. To do this we write
-an ```iot.toml``` file that defines what the image will contain:
+an `iot.toml` file that defines what the image will contain:
 
     name = "iot"
     description = ""
@@ -93,14 +94,14 @@ an ```iot.toml``` file that defines what the image will contain:
     modules = []
     groups = []
 
-I've chosen the name ```iot```, which is used in the steps below. For your
+I've chosen the name `iot`, which is used in the steps below. For your
 first go around just keep this simple name so you don't have to figure out all
 the places below to change the name. Even though we haven't added any specific
-```packages``` to this blueprint, all the necessary packages to get a
+`packages` to this blueprint, all the necessary packages to get a
 bootable system will be automatically included.
 
-Import the blueprint ```iot.toml``` file into Image Builder like this, and
-start an image build for the ```fedora-iot-commit``` image type:
+Import the blueprint `iot.toml` file into Image Builder like this, and
+start an image build for the `fedora-iot-commit` image type:
 
     $ sudo composer-cli blueprints push iot.toml
     $ sudo composer-cli compose start iot fedora-iot-commit
@@ -121,8 +122,8 @@ command. We'll be creating further files in the same directory below.
 # Setting up the Kickstart
 
 We'll install the OSTree in the Anaconda Installer using a Kickstart file.
-Create a file called ```ostree.ks``` containing the following content:
-in the current directory, the same containing the following content:
+Create a file called `ostree.ks` containing the following content
+in the current directory:
 
     lang en_US.UTF-8
     keyboard us
@@ -144,11 +145,11 @@ OSTree unfortunately doesn't come with a stock way to push or
 serve OSTree commits, so we'll need to build our own mechanism to serve the
 OSTree content. Lets use [Apache httpd](https://httpd.apache.org/) in
 a container. The OSTree client is so agressive with it's HTTP usage
-and overwhelms many HTTP servers. Don't get too fancy or opinionated
+that it overwhelms many HTTP servers. Don't get too fancy or opinionated
 about using your favorite HTTP server here.
 
-Create a ```Dockerfile``` with the following content. This file must be
-in the same directory as the tarball and ```ostree.ks``` file:
+Create a `Dockerfile` with the following content. This file must be
+in the same directory as the tarball and `ostree.ks` file:
 
     FROM registry.access.redhat.com/ubi8/ubi
     RUN yum -y install httpd && yum clean all
@@ -190,12 +191,12 @@ Boot a system using the ISO image you downloaded earlier. If you're using a
 virtual machine or hardware you can do this in different ways that I won't
 cover here.
 
-At the initial screen of that the Installer ISO displays, you'll see a line
+At the initial screen that the Installer ISO displays, you'll see a line
 something like *Install Fedora 32*:
 
 ![Anaconda boot menu](howto-ostree-anaconda-bootmenu.png)
 
-Before the time out expires, use the arrow keys to select that line, and press
+Before the time out, use the arrow keys to select that line, and press
 the TAB key. You'll see a line of kernel command line options appear below.
 Something like:
 
@@ -208,7 +209,7 @@ use the IP address you discovered earlier:
 
 ![Anaconda kernel command line](howto-ostree-anaconda-kernel-commandline.png)
 
-After you press ENTER, the installer should start. If things are wortking the
+After you press ENTER, the installer should start. If things are working the
 GUI should display but proceed automatically to the installation stage. You'll
 see text about the system being installed from the OSTree repo, and how it's
 pulling various objects.
@@ -216,6 +217,6 @@ pulling various objects.
 ![Anaconda kernel installing](howto-ostree-anaconda-installing.png)
 
 Once the system is installed, it'll reboot automatically. To log into your
-newly minted system use the login ```core``` and the password ```foobar```
-that you saw in the ```ostree.ks``` file.
+newly minted system use the login `core` and the password `foobar`
+that you saw in the `ostree.ks` file.
 
