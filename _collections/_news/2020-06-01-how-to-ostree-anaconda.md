@@ -17,8 +17,9 @@ providing a complete solution yet, so let me walk you through it.
 
 # Prerequisites
 
-The naming of *Image Builder* and it's various parts need some introduction.
-Here's how you get it all installed. We'll also use ```podman``` later on.
+The naming of *Image Builder* and it's various parts need
+[some introduction](../documentation/). So I'll give you the steps you need
+in order to get it all installed. We'll also use ```podman``` later on.
 
     $ sudo yum install osbuild osbuild-ostree osbuild-composer composer-cli podman
     $ sudo systemctl start osbuild-composer.socket
