@@ -1,11 +1,8 @@
 ---
-permalink: /howto/howto-ostree-anaconda.md
+caption: "How to: Image Builder + OSTree + Anaconda"
+author: "Stef Walter"
+categories: [fedoraplanet]
 ---
-
-{%- include ../global.html -%}
-
-# How to: Image Bulider + OSTree + Anaconda
-
 In version 15, *Image Builder* gained support for creating 
 [OSTree](https://ostree.readthedocs.io/en/latest/) commits.
 You can install a Linux system using those OSTree commits by using
@@ -14,6 +11,8 @@ and its
 [Kickstart functionality](https://anaconda-installer.readthedocs.io/en/latest/kickstart.html).
 This process is rather involved, with none of the individual parts
 providing a complete solution yet, so let me walk you through it.
+
+---
 
 # Prerequisites
 
