@@ -25,7 +25,7 @@ documentation of _OSBuild Composer_ (see below) will provide insights into the
 internals of the image building tools.
 
 * **How Tos**:
-   * [**Image Builder + OSTree + Anaconda**]({% link _collections/_news/2020-06-01-how-to-ostree-anaconda.md %})
+   * [**Image Builder + OSTree + Anaconda**](../news/2020-06-01-how-to-ostree-anaconda.html)
 
 * **Development**: [@GitHub](https://github.com/osbuild/cockpit-composer)
 
